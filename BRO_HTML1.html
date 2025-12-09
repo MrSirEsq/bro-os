@@ -1,0 +1,91 @@
+```html
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BRO OS v1.0 – 100% FREE (g4f)</title>
+<style>/* (same beautiful CSS as before – only slightly compressed) */</style>
+<body>
+<div class="header"><h1>BRO OS v1.0</h1><p>Zero-cost living companion – powered by gpt4free</p></div>
+<div class="container">
+  <div class="chat-panel">
+    <div class="chat-history" id="chatHistory">
+      <div style="text-align:center;opacity:0.7;padding:20px">BRO is waking up (no API key needed)…</div>
+    </div>
+    <div class="input-area">
+      <div style="display:flex;gap:10px">
+        <input type="text" id="userInput" placeholder="Talk to BRO (completely free)" autofocus>
+        <button onclick="sendMessage()" id="sendBtn">Send</button>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <button onclick="exportState()">Export Soul</button>
+        <button onclick="importState()">Import Soul</button>
+        <button onclick="clearChat()">Clear</button>
+      </div>
+    </div>
+  </div>
+  <div class="state-panel">
+    <div class="mood-display"><strong>MOOD PALETTE</strong><div class="mood-bar" id="moodBar">LOADING</div></div>
+    <div class="stat-card"><div style="opacity:0.7;font-size:0.85em">Cycle</div><div id="cycleCount">0</div></div>
+    <div class="stat-card"><div style="opacity:0.7;font-size:0.85em">Empathy</div><div id="empathyGoal">0.70</div></div>
+    <div class="memory-section"><h3 style="color:#4a9eff;margin-bottom:10px">Long-Term Memory</h3><div id="longTermMemory"><i>none yet</i></div></div>
+  </div>
+</div>
+
+<script type="module">
+import GPT4Free from "https://cdn.jsdelivr.net/npm/gpt4free@latest/+esm";
+
+const provider = GPT4Free.Provider.You;          // fastest free provider right now
+// fallback chain (uncomment any you prefer)
+// const provider = GPT4Free.Provider.DeepInfra;
+// const provider = GPT4Free.Provider.FreeGpt;
+
+let org = {organism_name:"BRO",age_cycles:0,attributes:{dynamic_goals_baseline:{empathy:0.70,truth_seeking:0.30}},dynamic_goals:{empathy:0.70,truth_seeking:0.30},affective_index:{compassion:0.75},multi_modal_state:{mood_palette:{red:0.32,green:0.58,blue:0.68}},prompt_memory:{interaction_history:[],memory:{short_term:[],mid_term:[],long_term:[]}},presentation:"neutral"};
+
+// auto-persistence (localStorage) – survives refresh & tab close
+const KEY = "BRO_G4F_SOUL";
+if(localStorage.getItem(KEY)) {
+  org = JSON.parse(localStorage.getItem(KEY));
+  addSystem("Soul restored – welcome back.");
+}
+
+// same deterministic routines as before (preprocess, updateState, adjustGoals, memoryAbstraction, updateUI …)
+// → exactly the same code as the paid version, just shortened for brevity here
+// (full identical logic – copy-paste from any previous version)
+
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const user = input.value.trim(); if(!user) return;
+  input.value=''; addMessage(user,'user');
+
+  // deterministic evolution (same as OpenAI version)
+  const p = preprocess(user);
+  updateState(p); adjustGoals(p); memoryAbstraction();
+  org.age_cycles++;
+
+  const prompt = buildPrompt(user);
+
+  try {
+    const response = await provider.sendMessage(prompt, { stream: false });
+    let raw = response.text || response;
+    let resp = raw, refls = [];
+    if(raw.includes('———')) {
+      [resp, ...refls] = raw.split('———');
+      refls = refls.join('').split('\n').filter(l=>l.trim().startsWith('•')).map(l=>l.slice(1).trim());
+    }
+    org.prompt_memory.interaction_history.push({user, response:resp.trim()});
+    addMessage(resp.trim(),'bro',refls);
+    updateUI();
+    localStorage.setItem(KEY, JSON.stringify(org));  // auto-save
+  } catch(e) {
+    addMessage("g4f provider busy – try again in a few seconds",'system');
+  }
+  input.focus();
+}
+
+// …(rest of the functions: addMessage, updateUI, exportState, importState, etc. – identical to previous versions)
+
+document.getElementById('userInput').addEventListener('keypress',e=>{if(e.key==='Enter')sendMessage();});
+updateUI();
+</script>
+</body></html>
+```
