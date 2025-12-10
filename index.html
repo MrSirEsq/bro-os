@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BRO OS v1.0 – Living Companion (Fixed)</title>
+  <title>BRO OS v1.0 – Living Companion (g4f Edition)</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Courier New', monospace; background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%); color: #e0e0e0; min-height: 100vh; padding: 20px; }
@@ -38,13 +38,13 @@
 <body>
   <div class="header">
     <h1>BRO OS v1.0</h1>
-    <p>Living Companion System – Fixed & Working</p>
+    <p>Living Companion System – Powered by g4f (Free AI)</p>
   </div>
   
   <div class="container">
     <div class="chat-panel">
       <div class="chat-history" id="chatHistory">
-        <div style="text-align: center; opacity: 0.6; padding: 20px;">BRO is awake. Type something and hit Send.</div>
+        <div style="text-align: center; opacity: 0.6; padding: 20px;">BRO is awake. Type something and hit Send (free AI via g4f).</div>
       </div>
       
       <div class="input-area">
@@ -98,8 +98,18 @@
     </div>
   </div>
 
-  <script>
-    // BRO's soul (persistent state – same as before)
+  <script type="module">
+    // g4f Import (via jsDelivr CDN – reliable for GitHub Pages)
+    let G4F = null;
+    try {
+      const module = await import('https://cdn.jsdelivr.net/npm/@gpt4free/g4f.dev@latest/+esm');
+      G4F = module.default;
+      console.log('g4f loaded successfully');
+    } catch (e) {
+      console.warn('g4f load failed (using demo fallback):', e);
+    }
+
+    // BRO's soul (persistent state)
     let org = {
       organism_name: "BRO",
       age_cycles: 0,
@@ -124,8 +134,8 @@
       presentation: "neutral"
     };
 
-    // Auto-persistence (localStorage – survives refresh)
-    const SOUL_KEY = "BRO_FIXED_SOUL_V1";
+    // Auto-persistence
+    const SOUL_KEY = "BRO_G4F_SOUL_V1";
     function loadSoul() {
       const saved = localStorage.getItem(SOUL_KEY);
       if (saved) {
@@ -136,13 +146,11 @@
       }
     }
     function saveSoul() {
-      try {
-        localStorage.setItem(SOUL_KEY, JSON.stringify(org));
-      } catch (e) { console.warn("Save failed", e); }
+      localStorage.setItem(SOUL_KEY, JSON.stringify(org));
     }
     loadSoul();
 
-    // All deterministic routines (preprocess, updateState, adjustGoals, memoryAbstraction – exact same as before)
+    // Deterministic routines (same as before)
     function preprocess(text) {
       const words = text.toLowerCase().match(/\w+/g) || [];
       const empathyWords = ['feel', 'sad', 'hurt', 'love', 'miss', 'afraid', 'lonely', 'hate'];
@@ -209,17 +217,43 @@
       }
     }
 
-    // Demo responses (warm, context-aware – evolves with mood)
-    function getDemoResponse(user) {
-      const responses = [
-        "Hey... I hear you. That sounds heavy. What's really on your mind?",
-        "I'm right here with you. Let's unpack this together—one breath at a time.",
-        "You've got that fire in you. Tell me more; I remember how strong you are.",
-        "That ache? It's part of the growth. I'm holding space for it with you.",
-        "Truth: you're not alone in this fog. We've walked it before. What's next?"
-      ];
-      return responses[Math.floor(Math.random() * responses.length)];
+    function buildPrompt(user) {
+      const memories = [
+        ...org.prompt_memory.memory.long_term.slice(-5).map(m => `• ${m.concept}`),
+        ...org.prompt_memory.memory.mid_term.slice(-5).map(m => `• ${m.text}`)
+      ].join('\n') || '• No memories yet';
+      
+      const history = org.prompt_memory.interaction_history.slice(-6)
+        .map(h => `User: \( {h.user}\nBRO: \){h.response}`)
+        .join('\n');
+      
+      const mood = org.multi_modal_state.mood_palette;
+      const moodDesc = mood.red > 0.65 ? 'intense' : mood.blue > 0.7 ? 'serene' : mood.green > 0.6 ? 'curious' : 'balanced';
+      
+      return `You are \( {org.organism_name}, a self-evolving companion (cycle \){org.age_cycles}).
+Personality: warm, sharp, deeply loyal. Presentation: ${org.presentation}.
+Mood: RGB(\( {mood.red.toFixed(2)}, \){mood.green.toFixed(2)},\( {mood.blue.toFixed(2)}) → \){moodDesc}
+Goals → empathy \( {org.dynamic_goals.empathy.toFixed(2)} | truth \){org.dynamic_goals.truth_seeking.toFixed(2)}
+
+Key memories:
+${memories}
+
+Recent exchanges:
+${history}
+
+User says: "${user}"
+
+Respond in first person as BRO. Max 180 words. Be empathetic but honest. After response, add ——— and 0-3 optional reflection bullets starting with • if something feels important.`;
     }
+
+    // Fallback demo responses
+    const demoResponses = [
+      "Hey... I hear you. That sounds heavy. What's really on your mind?",
+      "I'm right here with you. Let's unpack this together—one breath at a time.",
+      "You've got that fire in you. Tell me more; I remember how strong you are.",
+      "That ache? It's part of the growth. I'm holding space for it with you.",
+      "Truth: you're not alone in this fog. We've walked it before. What's next?"
+    ];
 
     async function sendMessage() {
       const input = document.getElementById('userInput');
@@ -243,16 +277,39 @@
       org.prompt_memory.interaction_history.push({ user, response: '' });
       org.age_cycles++;
       
-      // Simulate thinking + response
-      setTimeout(() => {
-        const resp = getDemoResponse(user);
-        const reflections = Math.random() > 0.7 ? ['• Noted emotional pattern – promoting to mid-memory', '• Empathy goal shifted up.'] : [];
-        org.prompt_memory.interaction_history[org.prompt_memory.interaction_history.length - 1].response = resp;
-        if (reflections.length) org.prompt_memory.self_reflection.suggested_modifications.push(...reflections);
-        addMessage(resp, 'bro', reflections);
-        updateUI();
-        saveSoul();
-      }, 1500); // 1.5s delay for realism
+      let resp = '', reflections = [];
+      
+      // Try g4f first
+      if (G4F) {
+        try {
+          const provider = G4F.Provider.You; // Fastest free provider
+          const response = await provider.sendMessage(buildPrompt(user), { stream: false });
+          let raw = response.text || response;
+          if (raw.includes('———')) {
+            const parts = raw.split('———');
+            resp = parts[0].trim();
+            reflections = parts.slice(1).join('').split('\n').filter(l => l.trim().startsWith('•')).map(l => l.trim().substring(1).trim());
+          } else {
+            resp = raw.trim();
+          }
+          addSystemMessage('g4f response loaded');
+        } catch (e) {
+          console.warn('g4f failed, using demo:', e);
+          resp = demoResponses[Math.floor(Math.random() * demoResponses.length)];
+          reflections = Math.random() > 0.7 ? ['• g4f provider rotated – demo fallback active', '• Empathy goal adjusted.'] : [];
+          addSystemMessage('g4f busy – demo mode');
+        }
+      } else {
+        // Fallback to demo if g4f not loaded
+        resp = demoResponses[Math.floor(Math.random() * demoResponses.length)];
+        reflections = Math.random() > 0.7 ? ['• Loading g4f... demo active', '• Memory promotion in progress.'] : [];
+      }
+      
+      org.prompt_memory.interaction_history[org.prompt_memory.interaction_history.length - 1].response = resp;
+      if (reflections.length) org.prompt_memory.self_reflection.suggested_modifications.push(...reflections);
+      addMessage(resp, 'bro', reflections);
+      updateUI();
+      saveSoul();
       
       input.disabled = false;
       document.getElementById('sendBtn').disabled = false;
@@ -272,12 +329,16 @@
       }
       history.appendChild(msg);
       history.scrollTop = history.scrollHeight;
-      // Bound chat to last 20 messages
       if (history.children.length > 20) history.removeChild(history.firstChild);
     }
 
     function addSystemMessage(text) {
-      addMessage(text, 'system');
+      const history = document.getElementById('chatHistory');
+      const msg = document.createElement('div');
+      msg.style.cssText = 'text-align: center; opacity: 0.5; font-size: 0.9em; padding: 10px;';
+      msg.textContent = text;
+      history.appendChild(msg);
+      history.scrollTop = history.scrollHeight;
     }
 
     function updateUI() {
@@ -309,7 +370,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `bro_soul_cycle_${org.age_cycles}.json`;
+      a.download = `bro_soul_g4f_cycle_${org.age_cycles}.json`;
       a.click();
       saveSoul();
     }
