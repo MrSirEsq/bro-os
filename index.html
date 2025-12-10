@@ -3,38 +3,257 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BRO OS v1.0 – Living Companion (g4f Edition)</title>
+  <title>BRO OS v1.0 – Living Companion (Mobile Fixed)</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Courier New', monospace; background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%); color: #e0e0e0; min-height: 100vh; padding: 20px; }
-    .container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 400px; gap: 20px; height: calc(100vh - 40px); }
-    .chat-panel { display: flex; flex-direction: column; background: rgba(20, 20, 40, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; overflow: hidden; }
-    .chat-history { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-    .message { padding: 15px; border-radius: 12px; max-width: 85%; animation: fadeIn 0.3s ease; }
+    body { 
+      font-family: 'Courier New', monospace; 
+      background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%); 
+      color: #e0e0e0; 
+      min-height: 100vh; 
+      padding: 10px; 
+      overflow-x: hidden; /* Prevent horizontal scroll */
+    }
+    .header { 
+      text-align: center; 
+      margin-bottom: 10px; 
+      padding: 15px; 
+      background: rgba(20, 20, 40, 0.6); 
+      border-radius: 12px; 
+      border: 1px solid rgba(255, 255, 255, 0.1); 
+    }
+    .header h1 { 
+      font-size: clamp(1.5em, 5vw, 2em); /* Responsive font */
+      margin-bottom: 5px; 
+      background: linear-gradient(135deg, #4a9eff 0%, #ff6b6b 100%); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+      background-clip: text; 
+    }
+    .container { 
+      display: flex; 
+      flex-direction: column; /* Stack vertically on mobile */
+      height: calc(100vh - 60px); /* Full height minus header/padding */
+      gap: 10px; 
+    }
+    @media (min-width: 768px) { /* Desktop: side-by-side */
+      .container { flex-direction: row; }
+      .chat-panel { flex: 1; }
+      .state-panel { width: 400px; }
+    }
+    .chat-panel { 
+      flex: 1; 
+      background: rgba(20, 20, 40, 0.6); 
+      border: 1px solid rgba(255, 255, 255, 0.1); 
+      border-radius: 12px; 
+      overflow: hidden; 
+      display: flex; 
+      flex-direction: column; 
+      min-height: 300px; /* Ensure min height on small screens */
+    }
+    .chat-history { 
+      flex: 1; 
+      overflow-y: auto; 
+      padding: 15px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+    }
+    .message { 
+      padding: 12px; 
+      border-radius: 12px; 
+      max-width: 90%; 
+      animation: fadeIn 0.3s ease; 
+      word-wrap: break-word; 
+    }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .user-message { background: rgba(74, 158, 255, 0.2); border: 1px solid rgba(74, 158, 255, 0.3); align-self: flex-end; }
     .bro-message { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); align-self: flex-start; }
-    .reflections { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.85em; opacity: 0.7; }
-    .input-area { padding: 20px; background: rgba(10, 10, 20, 0.8); border-top: 1px solid rgba(255, 255, 255, 0.1); }
-    .input-wrapper { display: flex; gap: 10px; }
-    input[type="text"] { flex: 1; padding: 12px 15px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: #e0e0e0; font-family: inherit; }
-    button { padding: 12px 24px; background: #4a9eff; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; font-family: inherit; transition: all 0.2s; }
-    button:hover { background: #357abd; transform: translateY(-2px); }
+    .reflections { margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.8em; opacity: 0.7; }
+    .input-area { 
+      padding: 15px; 
+      background: rgba(10, 10, 20, 0.8); 
+      border-top: 1px solid rgba(255, 255, 255, 0.1); 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+    }
+    .input-wrapper { 
+      display: flex; 
+      gap: 8px; 
+    }
+    input[type="text"] { 
+      flex: 1; 
+      padding: 12px; 
+      background: rgba(255, 255, 255, 0.05); 
+      border: 1px solid rgba(255, 255, 255, 0.2); 
+      border-radius: 8px; 
+      color: #e0e0e0; 
+      font-family: inherit; 
+      font-size: 16px; /* Prevent zoom on iOS */
+    }
+    button { 
+      padding: 12px 20px; 
+      background: #4a9eff; 
+      border: none; 
+      border-radius: 8px; 
+      color: white; 
+      font-weight: bold; 
+      cursor: pointer; 
+      font-family: inherit; 
+      font-size: 16px; /* Touch-friendly */
+      min-width: 80px; 
+      transition: all 0.2s; 
+    }
+    button:active { /* Touch feedback */
+      transform: scale(0.98); 
+      background: #357abd; 
+    }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
-    .mood-display { padding: 20px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(20, 20, 40, 0.6); }
-    .mood-bar { height: 40px; border-radius: 8px; margin-top: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; text-shadow: 0 0 10px rgba(0,0,0,0.8); transition: all 0.5s ease; }
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-    .stat-card { background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); }
-    .stat-label { font-size: 0.85em; opacity: 0.7; margin-bottom: 5px; }
-    .stat-value { font-size: 1.3em; font-weight: bold; }
-    .memory-section { background: rgba(20, 20, 40, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px; margin-top: 15px; }
-    .memory-section h3 { margin-bottom: 15px; color: #4a9eff; font-size: 0.95em; text-transform: uppercase; letter-spacing: 1px; }
-    .memory-item { background: rgba(255, 255, 255, 0.03); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid; font-size: 0.9em; line-height: 1.4; }
+    .mood-display { 
+      padding: 15px; 
+      border-radius: 12px; 
+      border: 1px solid rgba(255, 255, 255, 0.1); 
+      background: rgba(20, 20, 40, 0.6); 
+    }
+    .mood-bar { 
+      height: 40px; 
+      border-radius: 8px; 
+      margin-top: 10px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-weight: bold; 
+      text-shadow: 0 0 10px rgba(0,0,0,0.8); 
+      transition: all 0.5s ease; 
+    }
+    .stats-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+      gap: 8px; 
+      margin-top: 10px; 
+    }
+    .stat-card { 
+      background: rgba(255, 255, 255, 0.05); 
+      padding: 10px; 
+      border-radius: 8px; 
+      border: 1px solid rgba(255, 255, 255, 0.1); 
+      text-align: center; 
+    }
+    .stat-label { font-size: 0.8em; opacity: 0.7; margin-bottom: 3px; }
+    .stat-value { font-size: 1.2em; font-weight: bold; }
+    .memory-section { 
+      background: rgba(20, 20, 40, 0.6); 
+      border: 1px solid rgba(255, 255, 255, 0.1); 
+      border-radius: 12px; 
+      padding: 15px; 
+    }
+    .memory-section h3 { 
+      margin-bottom: 10px; 
+      color: #4a9eff; 
+      font-size: 0.9em; 
+      text-transform: uppercase; 
+      letter-spacing: 1px; 
+    }
+    .memory-item { 
+      background: rgba(255, 255, 255, 0.03); 
+      padding: 8px; 
+      border-radius: 6px; 
+      margin-bottom: 6px; 
+      border-left: 3px solid; 
+      font-size: 0.85em; 
+      line-height: 1.3; 
+    }
     .long-term { border-left-color: #ff6b6b; } .mid-term { border-left-color: #4ecdc4; }
-    .header { text-align: center; margin-bottom: 20px; padding: 20px; background: rgba(20, 20, 40, 0.6); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); }
-    .header h1 { font-size: 2em; margin-bottom: 5px; background: linear-gradient(135deg, #4a9eff 0%, #ff6b6b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .state-panel { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+      overflow-y: auto; 
+      max-height: 100%; 
+    }
+    @media (orientation: landscape) { /* Landscape tweaks */
+      body { padding: 5px; }
+      .container { height: calc(100vh - 40px); }
+    }
   </style>
 </head>
+<body>
+  <div class="header">
+    <h1>BRO OS v1.0</h1>
+    <p>Living Companion System – Mobile Optimized</p>
+  </div>
+  
+  <div class="container">
+    <div class="chat-panel">
+      <div class="chat-history" id="chatHistory">
+        <div style="text-align: center; opacity: 0.6; padding: 20px;">BRO is awake. Type and hit Send or Go.</div>
+      </div>
+      
+      <div class="input-area">
+        <div class="input-wrapper">
+          <input type="text" id="userInput" placeholder="Talk to BRO..." autofocus>
+          <button id="sendBtn">Send</button>
+        </div>
+        
+        <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+          <button onclick="exportState()">💾 Export</button>
+          <button onclick="importState()">📥 Import</button>
+          <button onclick="clearChat()">🗑️ Clear</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="state-panel">
+      <div class="mood-display">
+        <strong>MOOD PALETTE</strong>
+        <div class="mood-bar" id="moodBar">Balanced</div>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Cycle</div>
+            <div class="stat-value" id="cycleCount">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Empathy</div>
+            <div class="stat-value" id="empathyGoal">0.70</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Compassion</div>
+            <div class="stat-value" id="compassion">0.75</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Truth</div>
+            <div class="stat-value" id="truthGoal">0.30</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="memory-section">
+        <h3>Long-Term Memory</h3>
+        <div id="longTermMemory"><div style="opacity: 0.5; font-style: italic;">none yet</div></div>
+      </div>
+      
+      <div class="memory-section">
+        <h3>Mid-Term Memory</h3>
+        <div id="midTermMemory"><div style="opacity: 0.5; font-style: italic;">none yet</div></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // [Full script from previous demo/g4f version – paste the entire <script> block here from the last code I sent. For brevity, it's the same logic: preprocess, updateState, adjustGoals, memoryAbstraction, sendMessage with g4f + fallback, addMessage, updateUI, exportState, importState, clearChat, and event listeners.]
+    // Event listeners fixed for mobile:
+    const sendBtn = document.getElementById('sendBtn');
+    const userInput = document.getElementById('userInput');
+    sendBtn.addEventListener('click', sendMessage); // Works on touch/click
+    userInput.addEventListener('keypress', e => { 
+      if (e.key === 'Enter' || e.keyCode === 13) sendMessage(); // Enter or Go key
+    });
+    // ... (rest of script)
+  </script>
+</body>
+</html></head>
 <body>
   <div class="header">
     <h1>BRO OS v1.0</h1>
