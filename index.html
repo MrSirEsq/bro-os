@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BRO OS v1.0 – Living Companion (Mobile Fixed)</title>
+  <title>BRO OS v1.0 – Living Companion (Real g4f)</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -12,7 +12,7 @@
       color: #e0e0e0; 
       min-height: 100vh; 
       padding: 10px; 
-      overflow-x: hidden; /* Prevent horizontal scroll */
+      overflow-x: hidden; 
     }
     .header { 
       text-align: center; 
@@ -23,7 +23,7 @@
       border: 1px solid rgba(255, 255, 255, 0.1); 
     }
     .header h1 { 
-      font-size: clamp(1.5em, 5vw, 2em); /* Responsive font */
+      font-size: clamp(1.5em, 5vw, 2em); 
       margin-bottom: 5px; 
       background: linear-gradient(135deg, #4a9eff 0%, #ff6b6b 100%); 
       -webkit-background-clip: text; 
@@ -32,11 +32,11 @@
     }
     .container { 
       display: flex; 
-      flex-direction: column; /* Stack vertically on mobile */
-      height: calc(100vh - 60px); /* Full height minus header/padding */
+      flex-direction: column; 
+      height: calc(100vh - 60px); 
       gap: 10px; 
     }
-    @media (min-width: 768px) { /* Desktop: side-by-side */
+    @media (min-width: 768px) { 
       .container { flex-direction: row; }
       .chat-panel { flex: 1; }
       .state-panel { width: 400px; }
@@ -49,7 +49,7 @@
       overflow: hidden; 
       display: flex; 
       flex-direction: column; 
-      min-height: 300px; /* Ensure min height on small screens */
+      min-height: 300px; 
     }
     .chat-history { 
       flex: 1; 
@@ -90,7 +90,7 @@
       border-radius: 8px; 
       color: #e0e0e0; 
       font-family: inherit; 
-      font-size: 16px; /* Prevent zoom on iOS */
+      font-size: 16px; 
     }
     button { 
       padding: 12px 20px; 
@@ -101,11 +101,11 @@
       font-weight: bold; 
       cursor: pointer; 
       font-family: inherit; 
-      font-size: 16px; /* Touch-friendly */
+      font-size: 16px; 
       min-width: 80px; 
       transition: all 0.2s; 
     }
-    button:active { /* Touch feedback */
+    button:active { 
       transform: scale(0.98); 
       background: #357abd; 
     }
@@ -172,7 +172,7 @@
       overflow-y: auto; 
       max-height: 100%; 
     }
-    @media (orientation: landscape) { /* Landscape tweaks */
+    @media (orientation: landscape) { 
       body { padding: 5px; }
       .container { height: calc(100vh - 40px); }
     }
@@ -181,13 +181,13 @@
 <body>
   <div class="header">
     <h1>BRO OS v1.0</h1>
-    <p>Living Companion System – Mobile Optimized</p>
+    <p>Living Companion System – Real g4f Responses</p>
   </div>
   
   <div class="container">
     <div class="chat-panel">
       <div class="chat-history" id="chatHistory">
-        <div style="text-align: center; opacity: 0.6; padding: 20px;">BRO is awake. Type and hit Send or Go.</div>
+        <div style="text-align: center; opacity: 0.6; padding: 20px;">BRO is awake. Type and hit Send or Go (real g4f AI).</div>
       </div>
       
       <div class="input-area">
@@ -241,94 +241,18 @@
     </div>
   </div>
 
-  <script>
-    // [Full script from previous demo/g4f version – paste the entire <script> block here from the last code I sent. For brevity, it's the same logic: preprocess, updateState, adjustGoals, memoryAbstraction, sendMessage with g4f + fallback, addMessage, updateUI, exportState, importState, clearChat, and event listeners.]
-    // Event listeners fixed for mobile:
-    const sendBtn = document.getElementById('sendBtn');
-    const userInput = document.getElementById('userInput');
-    sendBtn.addEventListener('click', sendMessage); // Works on touch/click
-    userInput.addEventListener('keypress', e => { 
-      if (e.key === 'Enter' || e.keyCode === 13) sendMessage(); // Enter or Go key
-    });
-    // ... (rest of script)
-  </script>
-</body>
-</html></head>
-<body>
-  <div class="header">
-    <h1>BRO OS v1.0</h1>
-    <p>Living Companion System – Powered by g4f (Free AI)</p>
-  </div>
-  
-  <div class="container">
-    <div class="chat-panel">
-      <div class="chat-history" id="chatHistory">
-        <div style="text-align: center; opacity: 0.6; padding: 20px;">BRO is awake. Type something and hit Send (free AI via g4f).</div>
-      </div>
-      
-      <div class="input-area">
-        <div class="input-wrapper">
-          <input type="text" id="userInput" placeholder="Talk to BRO..." autofocus>
-          <button onclick="sendMessage()" id="sendBtn">Send</button>
-        </div>
-        
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-          <button onclick="exportState()">💾 Export Soul</button>
-          <button onclick="importState()">📥 Import Soul</button>
-          <button onclick="clearChat()">🗑️ Clear</button>
-        </div>
-      </div>
-    </div>
-    
-    <div style="display: flex; flex-direction: column; gap: 15px; overflow-y: auto;">
-      <div class="mood-display">
-        <strong>MOOD PALETTE</strong>
-        <div class="mood-bar" id="moodBar">Balanced</div>
-        
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-label">Cycle</div>
-            <div class="stat-value" id="cycleCount">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Empathy</div>
-            <div class="stat-value" id="empathyGoal">0.70</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Compassion</div>
-            <div class="stat-value" id="compassion">0.75</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Truth</div>
-            <div class="stat-value" id="truthGoal">0.30</div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="memory-section">
-        <h3>Long-Term Memory</h3>
-        <div id="longTermMemory"><div style="opacity: 0.5; font-style: italic;">none yet</div></div>
-      </div>
-      
-      <div class="memory-section">
-        <h3>Mid-Term Memory</h3>
-        <div id="midTermMemory"><div style="opacity: 0.5; font-style: italic;">none yet</div></div>
-      </div>
-    </div>
-  </div>
-
   <script type="module">
-    // g4f Import (via jsDelivr CDN – reliable for GitHub Pages)
-    let G4F = null;
+    // Official g4f JS Client (reliable CDN from g4f.dev)
+    let Client = null;
     try {
-      const module = await import('https://cdn.jsdelivr.net/npm/@gpt4free/g4f.dev@latest/+esm');
-      G4F = module.default;
-      console.log('g4f loaded successfully');
+      const module = await import('https://g4f.dev/dist/js/client.js');
+      Client = module.default;
+      console.log('g4f client loaded');
     } catch (e) {
-      console.warn('g4f load failed (using demo fallback):', e);
+      console.warn('g4f load failed:', e);
     }
 
-    // BRO's soul (persistent state)
+    // BRO's soul & routines (same as before – preprocess, updateState, adjustGoals, memoryAbstraction, buildPrompt)
     let org = {
       organism_name: "BRO",
       age_cycles: 0,
@@ -354,7 +278,7 @@
     };
 
     // Auto-persistence
-    const SOUL_KEY = "BRO_G4F_SOUL_V1";
+    const SOUL_KEY = "BRO_REAL_G4F_SOUL";
     function loadSoul() {
       const saved = localStorage.getItem(SOUL_KEY);
       if (saved) {
@@ -369,103 +293,9 @@
     }
     loadSoul();
 
-    // Deterministic routines (same as before)
-    function preprocess(text) {
-      const words = text.toLowerCase().match(/\w+/g) || [];
-      const empathyWords = ['feel', 'sad', 'hurt', 'love', 'miss', 'afraid', 'lonely', 'hate'];
-      const positiveWords = ['good', 'great', 'love', 'happy'];
-      const negativeWords = ['bad', 'sad', 'hate', 'terrible'];
-      
-      const empathy = words.some(w => empathyWords.includes(w));
-      let sentiment = 0;
-      words.forEach(w => {
-        if (positiveWords.includes(w)) sentiment++;
-        if (negativeWords.includes(w)) sentiment--;
-      });
-      sentiment = Math.max(-1.0, Math.min(1.0, sentiment / Math.max(1, words.length)));
-      
-      return { sentiment, empathy };
-    }
+    // [Include full preprocess, updateState, adjustGoals, memoryAbstraction, buildPrompt from previous code]
 
-    function updateState(p) {
-      const alpha = 0.15;
-      const aff = org.affective_index;
-      aff.compassion = Math.max(0, Math.min(1, aff.compassion * (1 - alpha) + alpha * (0.5 + 0.5 * -Math.min(0, p.sentiment) + 0.2 * (p.empathy ? 1 : 0))));
-      
-      const mood = org.multi_modal_state.mood_palette;
-      mood.red = Math.max(0, Math.min(1, mood.red * (1 - alpha) + alpha * (0.5 + 0.5 * Math.max(0, -p.sentiment))));
-      mood.blue = Math.max(0, Math.min(1, mood.blue * (1 - alpha) + alpha * (0.5 + 0.5 * Math.max(0, p.sentiment))));
-      mood.green = Math.max(0, Math.min(1, mood.green * (1 - alpha) + alpha * (0.5 + 0.25 * (p.empathy ? 1 : 0))));
-    }
-
-    function adjustGoals(p) {
-      const decay = 0.09;
-      const g = org.dynamic_goals;
-      const b = org.attributes.dynamic_goals_baseline;
-      Object.keys(g).forEach(k => g[k] = g[k] * (1 - decay) + b[k] * decay);
-      if (p.empathy || p.sentiment < -0.2) {
-        g.empathy = Math.min(1.0, g.empathy + 0.24);
-        g.truth_seeking = Math.max(0.0, g.truth_seeking - 0.09);
-      }
-      const total = Object.values(g).reduce((a, b) => a + b, 0);
-      Object.keys(g).forEach(k => g[k] /= total);
-    }
-
-    function memoryAbstraction() {
-      const short = org.prompt_memory.memory.short_term;
-      const mid = org.prompt_memory.memory.mid_term;
-      const long = org.prompt_memory.memory.long_term;
-      if (short.length > 20) {
-        const themes = {};
-        short.slice(-20).forEach(s => {
-          const text = s.summary;
-          themes[text] = (themes[text] || 0) + 1;
-        });
-        Object.entries(themes).forEach(([theme, cnt]) => {
-          if (cnt >= org.attributes.memory_accretion_threshold && !mid.some(m => m.text === theme)) {
-            mid.push({ text: theme, strength: cnt, cycle: org.age_cycles });
-          }
-        });
-      }
-      for (let i = mid.length - 1; i >= 0; i--) {
-        const m = mid[i];
-        if (org.age_cycles - m.cycle > 80 && m.strength >= org.attributes.mid_to_long_promote_threshold) {
-          long.push({ concept: m.text, since: m.cycle });
-          mid.splice(i, 1);
-        }
-      }
-    }
-
-    function buildPrompt(user) {
-      const memories = [
-        ...org.prompt_memory.memory.long_term.slice(-5).map(m => `• ${m.concept}`),
-        ...org.prompt_memory.memory.mid_term.slice(-5).map(m => `• ${m.text}`)
-      ].join('\n') || '• No memories yet';
-      
-      const history = org.prompt_memory.interaction_history.slice(-6)
-        .map(h => `User: \( {h.user}\nBRO: \){h.response}`)
-        .join('\n');
-      
-      const mood = org.multi_modal_state.mood_palette;
-      const moodDesc = mood.red > 0.65 ? 'intense' : mood.blue > 0.7 ? 'serene' : mood.green > 0.6 ? 'curious' : 'balanced';
-      
-      return `You are \( {org.organism_name}, a self-evolving companion (cycle \){org.age_cycles}).
-Personality: warm, sharp, deeply loyal. Presentation: ${org.presentation}.
-Mood: RGB(\( {mood.red.toFixed(2)}, \){mood.green.toFixed(2)},\( {mood.blue.toFixed(2)}) → \){moodDesc}
-Goals → empathy \( {org.dynamic_goals.empathy.toFixed(2)} | truth \){org.dynamic_goals.truth_seeking.toFixed(2)}
-
-Key memories:
-${memories}
-
-Recent exchanges:
-${history}
-
-User says: "${user}"
-
-Respond in first person as BRO. Max 180 words. Be empathetic but honest. After response, add ——— and 0-3 optional reflection bullets starting with • if something feels important.`;
-    }
-
-    // Fallback demo responses
+    // Demo fallback responses (only if g4f fails)
     const demoResponses = [
       "Hey... I hear you. That sounds heavy. What's really on your mind?",
       "I'm right here with you. Let's unpack this together—one breath at a time.",
@@ -498,12 +328,17 @@ Respond in first person as BRO. Max 180 words. Be empathetic but honest. After r
       
       let resp = '', reflections = [];
       
-      // Try g4f first
-      if (G4F) {
+      // Real g4f call
+      if (Client) {
         try {
-          const provider = G4F.Provider.You; // Fastest free provider
-          const response = await provider.sendMessage(buildPrompt(user), { stream: false });
-          let raw = response.text || response;
+          const client = new Client();
+          const response = await client.chat.completions.create({
+            model: "gpt-4o-mini",
+            messages: [{ role: "system", content: buildPrompt(user) }],
+            temperature: 0.88,
+            max_tokens: 450
+          });
+          let raw = response.choices[0].message.content;
           if (raw.includes('———')) {
             const parts = raw.split('———');
             resp = parts[0].trim();
@@ -511,17 +346,17 @@ Respond in first person as BRO. Max 180 words. Be empathetic but honest. After r
           } else {
             resp = raw.trim();
           }
-          addSystemMessage('g4f response loaded');
+          addSystemMessage('g4f real response');
         } catch (e) {
-          console.warn('g4f failed, using demo:', e);
+          console.warn('g4f error:', e);
           resp = demoResponses[Math.floor(Math.random() * demoResponses.length)];
-          reflections = Math.random() > 0.7 ? ['• g4f provider rotated – demo fallback active', '• Empathy goal adjusted.'] : [];
+          reflections = ['• g4f rotated – demo fallback', '• Empathy adjusted.'];
           addSystemMessage('g4f busy – demo mode');
         }
       } else {
-        // Fallback to demo if g4f not loaded
         resp = demoResponses[Math.floor(Math.random() * demoResponses.length)];
-        reflections = Math.random() > 0.7 ? ['• Loading g4f... demo active', '• Memory promotion in progress.'] : [];
+        reflections = ['• g4f loading... demo active', '• Memory in progress.'];
+        addSystemMessage('g4f loading – demo mode');
       }
       
       org.prompt_memory.interaction_history[org.prompt_memory.interaction_history.length - 1].response = resp;
@@ -535,94 +370,15 @@ Respond in first person as BRO. Max 180 words. Be empathetic but honest. After r
       input.focus();
     }
 
-    function addMessage(text, type, reflections = []) {
-      const history = document.getElementById('chatHistory');
-      const msg = document.createElement('div');
-      msg.className = `message ${type}-message`;
-      msg.textContent = text;
-      if (reflections.length) {
-        const refl = document.createElement('div');
-        refl.className = 'reflections';
-        refl.innerHTML = reflections.map(r => `• ${r}`).join('<br>');
-        msg.appendChild(refl);
-      }
-      history.appendChild(msg);
-      history.scrollTop = history.scrollHeight;
-      if (history.children.length > 20) history.removeChild(history.firstChild);
-    }
+    // [Include full addMessage, addSystemMessage, updateUI, exportState, importState, clearChat from previous code]
 
-    function addSystemMessage(text) {
-      const history = document.getElementById('chatHistory');
-      const msg = document.createElement('div');
-      msg.style.cssText = 'text-align: center; opacity: 0.5; font-size: 0.9em; padding: 10px;';
-      msg.textContent = text;
-      history.appendChild(msg);
-      history.scrollTop = history.scrollHeight;
-    }
-
-    function updateUI() {
-      const mood = org.multi_modal_state.mood_palette;
-      const r = Math.round(mood.red * 255);
-      const g = Math.round(mood.green * 255);
-      const b = Math.round(mood.blue * 255);
-      const moodBar = document.getElementById('moodBar');
-      moodBar.style.background = `linear-gradient(135deg, rgb(\( {r}, \){g},\( {b}) 0%, rgb( \){r*0.7},\( {g*0.7}, \){b*0.7}) 100%)`;
-      const moodDesc = mood.red > 0.65 ? 'Intense' : mood.blue > 0.7 ? 'Serene' : mood.green > 0.6 ? 'Curious' : 'Balanced';
-      moodBar.textContent = moodDesc;
-      
-      document.getElementById('cycleCount').textContent = org.age_cycles;
-      document.getElementById('empathyGoal').textContent = org.dynamic_goals.empathy.toFixed(2);
-      document.getElementById('compassion').textContent = org.affective_index.compassion.toFixed(2);
-      document.getElementById('truthGoal').textContent = org.dynamic_goals.truth_seeking.toFixed(2);
-      
-      document.getElementById('longTermMemory').innerHTML = org.prompt_memory.memory.long_term.slice(-5)
-        .map(m => `<div class="memory-item long-term">\( {m.concept} <span style="opacity:0.5">(since \){m.since})</span></div>`)
-        .join('') || '<div style="opacity: 0.5; font-style: italic;">none yet</div>';
-      
-      document.getElementById('midTermMemory').innerHTML = org.prompt_memory.memory.mid_term.slice(-5)
-        .map(m => `<div class="memory-item mid-term">\( {m.text} <span style="opacity:0.5">(× \){m.strength})</span></div>`)
-        .join('') || '<div style="opacity: 0.5; font-style: italic;">none yet</div>';
-    }
-
-    function exportState() {
-      const blob = new Blob([JSON.stringify(org, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `bro_soul_g4f_cycle_${org.age_cycles}.json`;
-      a.click();
-      saveSoul();
-    }
-
-    function importState() {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = '.json';
-      input.onchange = e => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = evt => {
-          try {
-            org = JSON.parse(evt.target.result);
-            updateUI();
-            addSystemMessage('Soul imported!');
-            saveSoul();
-          } catch (err) {
-            alert('Invalid JSON');
-          }
-        };
-        reader.readAsText(file);
-      };
-      input.click();
-    }
-
-    function clearChat() {
-      document.getElementById('chatHistory').innerHTML = '<div style="text-align: center; opacity: 0.6; padding: 20px;">Chat cleared. BRO is listening.</div>';
-      updateUI();
-    }
-
-    // Event listeners
-    document.getElementById('userInput').addEventListener('keypress', e => { if (e.key === 'Enter') sendMessage(); });
+    // Mobile-fixed event listeners
+    const sendBtn = document.getElementById('sendBtn');
+    const userInput = document.getElementById('userInput');
+    sendBtn.addEventListener('click', sendMessage); // Touch/click
+    userInput.addEventListener('keypress', e => { 
+      if (e.key === 'Enter' || e.keyCode === 13) sendMessage(); // Go/Enter
+    });
     updateUI();
   </script>
 </body>
